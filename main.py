@@ -1,5 +1,6 @@
 import asyncio
 from fpl_session import FplSession
+<<<<<<< HEAD
 import jsonpickle
 from models.user import User
 
@@ -9,6 +10,19 @@ user_gameweek_histories = []
 
 async def main():
     fpl_session = FplSession("mike.pratt@trelleborg.com", "KingOfTheBanana95")
+=======
+import json
+from models.standings import Standings
+from models.player import Player
+
+
+async def main():
+    fpl_session = FplSession("", "")
+    # fpl = FPL(session)
+    # player = await fpl_session.fpl.get_player(302)
+    # print(player)
+    # await get_my_team(fpl_session, 1025428)
+>>>>>>> parent of fdb4502... Working on getting gameweek history for each player in a league.
     await get_classic_league(fpl_session, 152458)
     await fpl_session.close()
 
@@ -25,6 +39,7 @@ async def get_classic_league(fpl_session, league_id):
     async with fpl_session.session:
         league = await fpl_session.fpl.get_classic_league(league_id)
         standings = await league.get_standings(1)
+<<<<<<< HEAD
         for standing_entry in standings['results']:
             users.append(standing_entry)
             # user = User(standing_entry['entry'], standing_entry['entry_name'], standing_entry['player_name'], standing_entry['rank'], standing_entry['total'])
@@ -48,5 +63,10 @@ async def get_user_gameweek_history(fpl_session, user_id):
         user_gameweek_histories.append(history)
     print(user_gameweek_histories)
 
+=======
+        for player in standings['results']:
+            print(player)
+    # print(standings)
+>>>>>>> parent of fdb4502... Working on getting gameweek history for each player in a league.
 
 asyncio.run(main())
