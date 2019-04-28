@@ -1,16 +1,12 @@
 import asyncio
 from fpl_session import FplSession
-import json
-from models.standings import Standings
+import jsonpickle
 from models.player import Player
 
+players = []
 
 async def main():
     fpl_session = FplSession("", "")
-    # fpl = FPL(session)
-    # player = await fpl_session.fpl.get_player(302)
-    # print(player)
-    # await get_my_team(fpl_session, 1025428)
     await get_classic_league(fpl_session, 152458)
     await fpl_session.close()
 
@@ -27,8 +23,18 @@ async def get_classic_league(fpl_session, league_id):
     async with fpl_session.session:
         league = await fpl_session.fpl.get_classic_league(league_id)
         standings = await league.get_standings(1)
-        for player in standings['results']:
-            print(player)
-    # print(standings)
+        for standing_entry in standings['results']:
+            player = Player(standing_entry['id'], standing_entry['entry'], standing_entry['entry_name'], standing_entry['player_name'], standing_entry['rank'], standing_entry['total'])
+            players.append(player)
+    for player in players:
+        print(jsonpickle.encode(player))
+        await get_player_gameweek_history(fpl_session, player.player_id)
+
+
+async def get_player_gameweek_history(fpl_session, user_id):
+    async with fpl_session.session:
+        user = await fpl_session.fpl.get_user(user_id)
+        gameweek_history = await user.get_gameweek_history()
+    print(gameweek_history)
 
 asyncio.run(main())
