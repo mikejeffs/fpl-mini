@@ -16,12 +16,3 @@ class FplSession:
 
     async def close(self):
         await self.session.close()
-
-    def open(self):
-        self.session = aiohttp.ClientSession()
-
-    def session_is_open(self):
-        if self.session.closed:
-            return False
-        else:
-            return True
