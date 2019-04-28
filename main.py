@@ -1,12 +1,14 @@
 import asyncio
 from fpl_session import FplSession
 import jsonpickle
-from models.player import Player
+from models.user import User
 
-players = []
+users = []
+user_gameweek_histories = []
+
 
 async def main():
-    fpl_session = FplSession("", "")
+    fpl_session = FplSession("mike.pratt@trelleborg.com", "KingOfTheBanana95")
     await get_classic_league(fpl_session, 152458)
     await fpl_session.close()
 
@@ -24,17 +26,27 @@ async def get_classic_league(fpl_session, league_id):
         league = await fpl_session.fpl.get_classic_league(league_id)
         standings = await league.get_standings(1)
         for standing_entry in standings['results']:
-            player = Player(standing_entry['id'], standing_entry['entry'], standing_entry['entry_name'], standing_entry['player_name'], standing_entry['rank'], standing_entry['total'])
-            players.append(player)
-    for player in players:
-        print(jsonpickle.encode(player))
-        await get_player_gameweek_history(fpl_session, player.player_id)
+            users.append(standing_entry)
+            # user = User(standing_entry['entry'], standing_entry['entry_name'], standing_entry['player_name'], standing_entry['rank'], standing_entry['total'])
+            # print(standing_entry)
+            # print('----------')
+            # users.append(user)
+        for user in users:
+            # print(jsonpickle.encode(user))
+            await get_user_gameweek_history(fpl_session, user['entry'])
 
 
-async def get_player_gameweek_history(fpl_session, user_id):
+async def get_user_gameweek_history(fpl_session, user_id):
     async with fpl_session.session:
+        await fpl_session.login()
+        # TODO: Replace user_id with user, standing_entry needs to be converted to a User object.
         user = await fpl_session.fpl.get_user(user_id)
-        gameweek_history = await user.get_gameweek_history()
-    print(gameweek_history)
+        # print(jsonpickle.encode(user))
+        history = await user.get_gameweek_history()
+        print('---------------')
+        print(history)
+        user_gameweek_histories.append(history)
+    print(user_gameweek_histories)
+
 
 asyncio.run(main())
