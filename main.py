@@ -5,7 +5,7 @@ from fpl import FPL
 
 
 async def main():
-    fpl_session = FplSession("mike.pratt@trelleborg.com", "BananaKing95")
+    fpl_session = FplSession("YOUR_EMAIL", "YOUR_PASSWORD")
     # fpl = FPL(session)
     player = await fpl_session.fpl.get_player(302)
     print(player)
