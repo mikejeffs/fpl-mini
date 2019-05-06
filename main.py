@@ -7,16 +7,19 @@ import jsonpickle
 
 users = []
 
+gameweeks = []
 
 async def main():
     fpl_session = FplSession(secrets.email, secrets.password)
     await get_classic_league(fpl_session, 152458)
     await fpl_session.close()
-    create_gameweek_table(1)
+    i = 1
+    while i != 38:
+        create_gameweek_table(i)
+        i += 1
 
-    # print(jsonpickle.encode(user_gameweek_histories))
     # file = open("gameweeks.txt", "w")
-    # file.write(jsonpickle.encode(user_gameweek_histories))
+    # file.write(jsonpickle.encode(gameweeks))
     # file.close
     print('closed')
 
@@ -65,6 +68,7 @@ def create_gameweek_table(gameweek_number):
         entry['rank'] = gameweek_table.index(entry) + 1 # update ranking of each entry in the gameweek
 
     print(gameweek_table)
+    gameweeks.append(gameweek_table)
 
 
 asyncio.run(main())
