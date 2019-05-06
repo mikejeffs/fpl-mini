@@ -1,20 +1,21 @@
 import asyncio
 from fpl_session import FplSession
 from models.User import User
+from models.gameweek import Gameweek
 import secrets
 import jsonpickle
 
 users = []
-user_gameweek_histories = []
 
 
 async def main():
     fpl_session = FplSession(secrets.email, secrets.password)
     await get_classic_league(fpl_session, 152458)
     await fpl_session.close()
-    file = open("gameweeks.txt", "w")
-    file.write(jsonpickle.encode(user_gameweek_histories))
-    file.close
+    # print(jsonpickle.encode(user_gameweek_histories))
+    # file = open("gameweeks.txt", "w")
+    # file.write(jsonpickle.encode(user_gameweek_histories))
+    # file.close
     print('closed')
 
 
@@ -31,30 +32,25 @@ async def get_classic_league(fpl_session, league_id):
         league = await fpl_session.fpl.get_classic_league(league_id)
         standings = await league.get_standings(1)
         for standing_entry in standings['results']:
-            user = User(standing_entry['entry'], standing_entry['entry_name'], standing_entry['player_name'])
+            user = User(standing_entry['entry'], standing_entry['entry_name'], standing_entry['player_name'], [])
             users.append(user)
 
         for user in users:
-            print('the perils of Python ---------_________-----------------')
             print(jsonpickle.encode(user))
-            await get_user_gameweek_history(fpl_session, user.id)
-            print('-------- Get history for next user --------')
+            users_gameweeks = await get_user_gameweek_history(fpl_session, user.id)
+            # key_pair = {'user': user, 'gameweeks': users_gameweeks}
+            user.set_game_weeks(users_gameweeks)
+            print(user.get_game_weeks())
 
 
 async def get_user_gameweek_history(fpl_session, user_id):
-    # async with fpl_session.session:
-    print('1')
-    # await fpl_session.login()
-    # TODO: Replace user_id with user, standing_entry needs to be converted to a User object.
     user = await fpl_session.fpl.get_user(user_id)
-    print('2')
-    # print(jsonpickle.encode(user))
     history = await user.get_gameweek_history()
-    print('3')
-    print('---------------')
-    print(history)
-    user_gameweek_histories.append(history)
-    print(user_gameweek_histories)
+    gameweeks = []
+    for gameweek in history:
+        user_gameweek = Gameweek(gameweek['event'], user_id, gameweek['points'], gameweek['total_points'], 0)
+        gameweeks.append(user_gameweek)
+    return gameweeks
 
 
 asyncio.run(main())

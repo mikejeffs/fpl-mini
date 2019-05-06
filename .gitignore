@@ -4,3 +4,4 @@ secrets.py
 .idea/fpl-mini.iml
 .idea/misc.xml
 gameweeks.txt
+gameweeks.json
