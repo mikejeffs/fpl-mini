@@ -57,7 +57,14 @@ def create_gameweek_table(gameweek_number):
         if user_gameweek == None: # user may not have participated in this game week
             continue
         gameweek_data = {'user': user.user_name, 'team_name': user.team_name, 'gameweek_points': user_gameweek.gameweek_points, 'total_points': user_gameweek.total_points, 'rank': user_gameweek.rank}
-        print(gameweek_data)
+        gameweek_table.append(gameweek_data)
+
+    gameweek_table.sort(key=lambda g: g['total_points'], reverse=True) # Sort in order of highest total points.
+
+    for entry in gameweek_table:
+        entry['rank'] = gameweek_table.index(entry) + 1 # update ranking of each entry in the gameweek
+
+    print(gameweek_table)
 
 
 asyncio.run(main())
