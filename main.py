@@ -4,6 +4,7 @@ from models.User import User
 from models.gameweek import Gameweek
 import secrets
 import jsonpickle
+import json
 
 users = []
 
@@ -18,9 +19,10 @@ async def main():
         create_gameweek_table(i)
         i += 1
 
-    # file = open("gameweeks.txt", "w")
-    # file.write(jsonpickle.encode(gameweeks))
-    # file.close
+    json_data = json.dumps(gameweeks)
+    file = open("gameweeks.json", "w")
+    file.write(json_data)
+    file.close
     print('closed')
 
 
@@ -35,7 +37,6 @@ async def get_classic_league(fpl_session, league_id):
         for user in users:
             print(jsonpickle.encode(user))
             users_gameweeks = await get_user_gameweek_history(fpl_session, user.id)
-            # key_pair = {'user': user, 'gameweeks': users_gameweeks}
             user.set_game_weeks(users_gameweeks)
 
 
@@ -67,6 +68,7 @@ def create_gameweek_table(gameweek_number):
     for entry in gameweek_table:
         entry['rank'] = gameweek_table.index(entry) + 1 # update ranking of each entry in the gameweek
 
+    gameweek_table.append({'gameweek': gameweek_number})
     print(gameweek_table)
     gameweeks.append(gameweek_table)
 
