@@ -60,7 +60,7 @@ def create_gameweek_table(gameweek_number):
 
         if user_gameweek == None: # user may not have participated in this game week
             continue
-        gameweek_user_entry = {'user': user.user_name, 'team_name': user.team_name, 'gameweek_points': user_gameweek.gameweek_points, 'total_points': user_gameweek.total_points, 'rank': user_gameweek.rank}
+        gameweek_user_entry = {'rank': user_gameweek.rank, 'user': user.user_name, 'team_name': user.team_name, 'gameweek_points': user_gameweek.gameweek_points, 'total_points': user_gameweek.total_points}
         gameweek_table['gameweek_data'].append(gameweek_user_entry)
 
     gameweek_table['gameweek_data'].sort(key=lambda g: g['total_points'], reverse=True) # Sort in order of highest total points.
