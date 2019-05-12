@@ -51,7 +51,7 @@ async def get_user_gameweek_history(fpl_session, user_id):
 
 
 def create_gameweek_table(gameweek_number):
-    gameweek_table = []
+    gameweek_table = {'gameweek': 0, 'gameweek_data': []}
     for user in users:
         user_gameweek = None
         for gameweek in user.get_game_weeks():
@@ -60,15 +60,15 @@ def create_gameweek_table(gameweek_number):
 
         if user_gameweek == None: # user may not have participated in this game week
             continue
-        gameweek_data = {'user': user.user_name, 'team_name': user.team_name, 'gameweek_points': user_gameweek.gameweek_points, 'total_points': user_gameweek.total_points, 'rank': user_gameweek.rank}
-        gameweek_table.append(gameweek_data)
+        gameweek_user_entry = {'user': user.user_name, 'team_name': user.team_name, 'gameweek_points': user_gameweek.gameweek_points, 'total_points': user_gameweek.total_points, 'rank': user_gameweek.rank}
+        gameweek_table['gameweek_data'].append(gameweek_user_entry)
 
-    gameweek_table.sort(key=lambda g: g['total_points'], reverse=True) # Sort in order of highest total points.
+    gameweek_table['gameweek_data'].sort(key=lambda g: g['total_points'], reverse=True) # Sort in order of highest total points.
 
-    for entry in gameweek_table:
-        entry['rank'] = gameweek_table.index(entry) + 1 # update ranking of each entry in the gameweek
+    for entry in gameweek_table['gameweek_data']:
+        entry['rank'] = gameweek_table['gameweek_data'].index(entry) + 1 # update ranking of each entry in the gameweek
 
-    gameweek_table.append({'gameweek': gameweek_number})
+    gameweek_table['gameweek'] = gameweek_number
     print(gameweek_table)
     gameweeks.append(gameweek_table)
 
