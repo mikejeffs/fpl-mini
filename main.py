@@ -15,7 +15,7 @@ async def main():
     await get_classic_league(fpl_session, 152458)
     await fpl_session.close()
     i = 1
-    while i != 38:
+    while i != 39:
         create_gameweek_table(i)
         i += 1
 
