@@ -9,13 +9,15 @@ import json
 users = []
 
 gameweeks = []
+num_of_gameweeks = 47 # Normally 38 but 47 due to COVID. (fpl gameweeks after 38 are postfixed with a '+')
 
 async def main():
+    league_id = input("Enter your mini league id: ") # No Validation here, be careful I guess.
     fpl_session = FplSession(secrets.email, secrets.password)
-    await get_classic_league(fpl_session, 152458)
+    await get_classic_league(fpl_session, league_id)
     await fpl_session.close()
     i = 1
-    while i != 39:
+    while i != num_of_gameweeks + 1:
         create_gameweek_table(i)
         i += 1
 
@@ -28,6 +30,7 @@ async def main():
 
 async def get_classic_league(fpl_session, league_id):
     async with fpl_session.session:
+        await fpl_session.login()
         league = await fpl_session.fpl.get_classic_league(league_id)
         standings = await league.get_standings(1)
         for standing_entry in standings['results']:
