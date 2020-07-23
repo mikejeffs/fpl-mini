@@ -1,4 +1,4 @@
-class User: # Should be User really, player implies Mo Salah.
+class User:
     def __init__(self, id, team_name, user_name, game_weeks):
         self.id = id
         self.team_name = team_name

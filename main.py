@@ -32,7 +32,7 @@ async def get_classic_league(fpl_session, league_id):
     async with fpl_session.session:
         await fpl_session.login()
         league = await fpl_session.fpl.get_classic_league(league_id)
-        standings = await league.get_standings(1)
+        standings = await league.get_standings(1) # FIXME Only supports first page.
         for standing_entry in standings['results']:
             user = User(standing_entry['entry'], standing_entry['entry_name'], standing_entry['player_name'], [])
             users.append(user)
@@ -63,7 +63,7 @@ def create_gameweek_table(gameweek_number):
 
         if user_gameweek == None: # user may not have participated in this game week
             continue
-        gameweek_user_entry = {'rank': user_gameweek.rank, 'user': user.user_name, 'team_name': user.team_name, 'gameweek_points': user_gameweek.gameweek_points, 'total_points': user_gameweek.total_points}
+        gameweek_user_entry = {'rank': user_gameweek.rank, 'user': user.user_name, 'user_id': user.id, 'team_name': user.team_name, 'gameweek_points': user_gameweek.gameweek_points, 'total_points': user_gameweek.total_points}
         gameweek_table['gameweek_data'].append(gameweek_user_entry)
 
     gameweek_table['gameweek_data'].sort(key=lambda g: g['total_points'], reverse=True) # Sort in order of highest total points.
