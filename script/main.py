@@ -2,18 +2,24 @@ import asyncio
 from fpl_session import FplSession
 from models.User import User
 from models.gameweek import Gameweek
-import secrets
 import jsonpickle
 import json
+import configparser
 
 users = []
 
 gameweeks = []
-num_of_gameweeks = 47 # Normally 38 but 47 due to COVID. (fpl gameweeks after 38 are postfixed with a '+')
+num_of_gameweeks = 38 # Normally 38 but 47 due to COVID. (fpl gameweeks after 38 are postfixed with a '+')
 
 async def main():
     league_id = input("Enter your mini league id: ") # No Validation here, be careful I guess.
-    fpl_session = FplSession(secrets.email, secrets.password)
+    config = configparser.RawConfigParser()
+    config.read("secrets.cfg")
+
+    login_dict = getLoginSecrets()
+
+
+    fpl_session = FplSession(login_dict["email"], login_dict["password"])
     await get_classic_league(fpl_session, league_id)
     await fpl_session.close()
     i = 1
@@ -22,7 +28,7 @@ async def main():
         i += 1
 
     json_data = json.dumps(gameweeks)
-    file = open("gameweeks.json", "w")
+    file = open("../data/gameweeks.json", "w")
     file.write(json_data)
     file.close
     print('closed')
@@ -74,6 +80,13 @@ def create_gameweek_table(gameweek_number):
     gameweek_table['gameweek'] = gameweek_number
     print(gameweek_table)
     gameweeks.append(gameweek_table)
+
+def getLoginSecrets():
+    config = configparser.RawConfigParser()
+    config.read("secrets.cfg")
+
+    return dict(config.items("SECRETS"))
+    
 
 
 asyncio.run(main())

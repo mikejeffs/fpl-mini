@@ -1,11 +1,6 @@
-
-secrets.py
 .idea/
 __pycache__
 vene/
-.idea/fpl-mini.iml
-.idea/fpl-mini.iml
-.idea/misc.xml
-gameweeks.txt
-gameweeks.json
+venv/*
 get-pip.py
+data/*
