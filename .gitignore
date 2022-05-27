@@ -3,3 +3,4 @@ __pycache__
 vene/
 venv/*
 get-pip.py
+data/gameweeks.json
