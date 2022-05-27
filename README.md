@@ -5,6 +5,8 @@ This script will generate a JSON file containing the standings of a mini league 
 
 **Only the first page of users in a mini league are supported, if you have a mini league with more than one pages' worth of users (I believe the limit per page is 25?) then this script will only get the first page of users stats for each gameweek. PR's are welcome to support multiple pages of users!**
 
+This project makes use of the FPL python library to get the data from the Fantasy Premier League API. The library can be found here: https://github.com/amosbastian/fpl
+
 ## Running the script
 Requires the following dependencies, install via pip:
     + fpl
@@ -12,7 +14,7 @@ Requires the following dependencies, install via pip:
     + jsonpickle
 
 - Enter your email address and password for FPL in the secrets.cfg file
-- Open a terminal and run 'python3 main.py' to start the script.
+- Open a terminal and run 'python3 main.py' to start the script. (main.py is located within the /script folder)
 - Enter the mini league id
 - Viola! the gameweeks.json file can be found in the data directory.
 
